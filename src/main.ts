@@ -7,25 +7,25 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons'
 
 import { createRouter, createWebHashHistory } from "vue-router"
-import Home from "./components/Home.vue"
+import Storefront from "./components/Storefront.vue"
 import Login from "./components/Login.vue"
 import SignUp from "./components/SignUp.vue"
 import Profile from "./components/Profile.vue"
 import Statistics from "./components/Statistics.vue"
 import CreateOffer from "./components/CreateOffer.vue"
-import Item from "./components/Item.vue"
+import ListItem from "./components/ListItem.vue"
 import Help from "./components/Help.vue"
 
 
 const componentRoutes = [
-    { path: "/", component: Home },
+    { path: "/", component: Storefront },
     { path: "/login", component: Login },
     { path: "/signup", component: SignUp },
     { path: "/profile", component: Profile },
     { path: "/help", component: Help },
     { path: "/statistics", component: Statistics },
     { path: "/createoffer", component: CreateOffer },
-    { path: "/item", component: Item },
+    { path: "/listitem", component: ListItem },
 ];
 
 const router = createRouter({

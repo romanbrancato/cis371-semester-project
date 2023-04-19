@@ -5,6 +5,11 @@
   <div>
     <img class="logo" src="./assets/logo.png">
   </div>
+  <div class="link-container2">
+    <RouterLink to="/">
+      <fa :icon="['fas', 'magnifying-glass']" /> Browse
+    </RouterLink>
+  </div>
   <div class="link-container">
     <RouterLink to="/login">
       <fa :icon="['fass', 'tags']" /> List Item
@@ -14,7 +19,7 @@
       <fa :icon="['fas', 'user']" /> Login
     </RouterLink>
 
-    <RouterLink to="/">
+    <RouterLink to="/help">
       <fa :icon="['fas', 'handshake-angle']" /> Help
     </RouterLink>
 
@@ -32,11 +37,6 @@
   transform: translateX(-50%);
   width: 150vh;
   height: 85vh;
-  background-color: white;
-  border-radius: 40px;
-  overflow: auto;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(to bottom right, #97BEB9, White);
 }
 
 .logo {
@@ -48,10 +48,18 @@
   transform: translateY(-50%);
 }
 
-.link-container{
+.link-container {
   position: fixed;
   top: 6%;
   right: 10%;
+  width: 50vh;
+  height: 10vh;
+}
+
+.link-container2 {
+  position: fixed;
+  top: 6%;
+  right: 60%;
   width: 50vh;
   height: 10vh;
 }
