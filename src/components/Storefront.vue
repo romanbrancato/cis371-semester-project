@@ -9,8 +9,13 @@
     </div>
     <div>Listings</div>
     <div class="item-container">
-        <div class="item" v-for="item in filteredList()" :key="item">
-            <p>{{ item }}</p>
+        <div class="item" v-for="item in filteredList()" :key="item.id">
+            <img :src="item.image_url">
+            <div class="details">
+                <h2>{{ item.item_name }}</h2>
+                <p>${{ item.price }}</p>
+                <p>{{ item.location }}</p>
+            </div>
         </div>
         <div class="error" v-if="input && !filteredList().length">
             <p>No results found!</p>
@@ -19,23 +24,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
-import { auth } from "../main";
+import { ref, reactive, onMounted} from "vue";
+import { auth, db } from "../main";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const currentUser = ref(auth.currentUser);
 let input = ref("");
-let items = reactive(["ITEM", "ITEM", "ITEM", "ITEM", "ITEM", "ITEM", "ITEM", "ITEM", "ITEM"]);
+let items = reactive([])
 
 onMounted(() => {
-    //loop through firebase collection of items and push them to the items array
-    //create 2 classes inside of the item div, one for the picture and another for the name, price, and seller name
-
+    const listingsRef = collection(db, "listings");
+    onSnapshot(listingsRef, (querySnapshot) => {
+        const newItems = [];
+        querySnapshot.forEach((doc) => {
+            const item = {
+                id: doc.id,
+                ...doc.data()
+            };
+            newItems.push(item);
+        });
+        items = newItems;
+    });
 });
 
 function filteredList() {
-    return items.filter((item) =>
-        item.toLowerCase().includes(input.value.toLowerCase())
-    );
+    return items.filter((item) => {
+        const searchTerm = input.value.toLowerCase();
+        const itemName = item.item_name.toLowerCase();
+        const description = item.description.toLowerCase();
+        const location = item.location.toLowerCase();
+        return (
+            itemName.includes(searchTerm) ||
+            description.includes(searchTerm) ||
+            location.includes(searchTerm)
+        );
+    });
 }
 </script>
 
@@ -122,7 +145,7 @@ input:focus {
     width: 265px;
     height: 300px;
     margin: 0 10px 10px 0;
-    padding: 10px 20px;
+    padding: 6px 6px;
     color: white;
     background: linear-gradient(to bottom left, #E3E6EF, White);
     cursor: pointer;
@@ -152,5 +175,15 @@ input:focus {
 /* Handle on hover */
 .item-container::-webkit-scrollbar-thumb:hover {
     background: #E3D5C4;
+}
+.details {
+    position:fixed;
+    bottom: 12%;
+  text-align: left;
+}
+
+img{
+    width: 100%;
+    height: 60%;
 }
 </style>

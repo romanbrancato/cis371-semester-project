@@ -5,20 +5,21 @@
             <span>Add Photo</span>
         </label>
         <input id="photo-upload" type="file" accept="image/*" @change="handleFileUpload">
-        <img v-if="image" :src="image" alt="Uploaded photo" class="uploaded-image">
+        <img v-if="image" :src="image" class="uploaded-image">
     </div>
     <div class="item-properties-container">
         <form>
             <br>
             <input id="item_name" v-model="item_name" required placeholder="Item Name">
             <br>
-            <textarea style="font-family: sans-serif;" class="description" required placeholder="Description..."></textarea>
+            <textarea style="font-family: sans-serif;" class="description" v-model="description" required
+                placeholder="Description..."></textarea>
             <br>
             <input class="price" type="number" id="price" v-model="price" required placeholder="Price">
             <br>
             <input class="location" type="text" id="location" v-model="location" required placeholder="City, State">
         </form>
-        <button class="circular-button" title="Create New Listing" @click="createListing">
+        <button class="circular-button" title="Create New Listing" type="submit" @click="createListing">
             <fa :icon="['fas', 'plus']" />
         </button>
     </div>
@@ -27,7 +28,9 @@
 <script lang="ts">
 import { db, auth, storage } from "../main";
 import { addDoc, collection } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL,} from "firebase/storage";
+
+let file;
 
 export default {
     data() {
@@ -41,10 +44,12 @@ export default {
     },
     methods: {
         handleFileUpload(event) {
-            const file = event.target.files[0];
-            // Do something with the file
-            // After the file is uploaded, set the image variable to the URL of the uploaded image
-            this.image = URL.createObjectURL(file);
+            file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.image = reader.result;
+            };
+            reader.readAsDataURL(file);
         },
         replaceImage() {
             if (this.image) {
@@ -57,11 +62,13 @@ export default {
             const user = auth.currentUser;
             const userId = user.uid;
 
-            // Upload the image file to Firebase Storage
+            // Create a reference to the Firebase Storage bucket
             const storageRef = ref(storage, `images/${userId}/${Date.now()}`);
-            const snapshot = await uploadBytes(storageRef, this.image);
 
-            // Get the download URL for the image
+            // Upload the file to the bucket using the put method
+            const snapshot = await uploadBytes(storageRef, file);
+
+            // Get the download URL for the uploaded file
             const downloadUrl = await getDownloadURL(snapshot.ref);
 
             // Create a new document in the "listings" collection in Firestore
@@ -71,7 +78,8 @@ export default {
                 description: this.description,
                 price: this.price,
                 location: this.location,
-                user_id: userId
+                image_url: downloadUrl,
+                user_id: userId,
             });
 
             // Reset the form data
@@ -80,7 +88,7 @@ export default {
             this.price = null;
             this.location = "";
             this.image = null;
-        }
+        },
     },
 };
 </script>
@@ -111,6 +119,7 @@ export default {
     border-radius: 40px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     background: linear-gradient(to bottom left, #E3E6EF, White);
+    cursor: pointer;
 }
 
 .uploaded-image {
