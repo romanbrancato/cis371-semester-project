@@ -1,6 +1,3 @@
-<script setup lang="ts">
-</script>
-
 <template>
   <div>
     <img class="logo" src="./assets/logo.png">
@@ -11,12 +8,12 @@
     </RouterLink>
   </div>
   <div class="link-container">
-    <RouterLink to="/login">
+    <RouterLink :to="currentUser ? '/listitem' : '/login'">
       <fa :icon="['fass', 'tags']" /> List Item
     </RouterLink>
 
-    <RouterLink to="/login">
-      <fa :icon="['fas', 'user']" /> Login
+    <RouterLink :to="currentUser ? '/profile' : '/login'">
+      <fa :icon="['fas', 'user']" /> {{ loggedInUser }}
     </RouterLink>
 
     <RouterLink to="/help">
@@ -28,6 +25,23 @@
     <router-view></router-view>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { auth } from "./main";
+
+const currentUser = ref(auth.currentUser);
+const loggedInUser = ref("Login");
+
+watch(currentUser, (user) => {
+  loggedInUser.value = user ? user.email.substring(0, user.email.indexOf('@')) : "Login";
+});
+
+auth.onAuthStateChanged((user) => {
+  currentUser.value = user;
+}); 
+
+</script>
 
 <style scoped>
 .center-menu {
@@ -63,4 +77,9 @@
   width: 50vh;
   height: 10vh;
 }
+
+a{
+  margin-right: 30px;
+}
+
 </style>

@@ -1,9 +1,11 @@
 <template>
     <div class="search-container">
         <input type="text" v-model="input" placeholder="Search..." />
-        <button class="circular-button" title="Create New Listing"> 
-            <fa :icon="['fas', 'plus']" /> 
-        </button>
+        <router-link :to="currentUser ? '/listitem' : '/login'">
+            <button class="circular-button" title="Create New Listing">
+                <fa :icon="['fas', 'plus']" />
+            </button>
+        </router-link>
     </div>
     <div>Listings</div>
     <div class="item-container">
@@ -17,14 +19,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
+import { auth } from "../main";
+
+const currentUser = ref(auth.currentUser);
 let input = ref("");
-let items = ["ITEM","ITEM","ITEM","ITEM","ITEM","ITEM","ITEM","ITEM","ITEM"];
+let items = reactive(["ITEM", "ITEM", "ITEM", "ITEM", "ITEM", "ITEM", "ITEM", "ITEM", "ITEM"]);
 
 onMounted(() => {
     //loop through firebase collection of items and push them to the items array
     //create 2 classes inside of the item div, one for the picture and another for the name, price, and seller name
-   
+
 });
 
 function filteredList() {

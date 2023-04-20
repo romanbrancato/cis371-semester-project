@@ -1,7 +1,7 @@
 :root {
   font-family: sans-serif, system-ui, Avenir, Helvetica, Arial;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 600;
   color: black;
   background: white;
   height: 100vh;
@@ -17,11 +17,49 @@ a {
   font-weight: 600;
   color: black;
   text-decoration: inherit;
-  margin-right: 30px;
 }
 
 a:hover {
   color: #94BAB5;
+}
+
+button {
+  font-weight: 600;
+}
+
+#nav {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+#nav a {
+  color: black;
+  padding: 10px;
+  margin-right: 40px;
+}
+
+#nav a:last-child {
+  margin-right: 0;
+}
+
+#nav a.active-tab {
+  position: relative;
+}
+
+#nav a:hover {
+  color: white;
+}
+
+#nav a.active-tab::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 50%;
+  background-color: black;
 }
 
 #app {
