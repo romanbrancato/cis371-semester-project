@@ -39,14 +39,16 @@ export const storage = getStorage();
 
 
 const componentRoutes = [
-    { path: '/item/:id', component: Item,
-        props: route => ({
-          id: route.params.id,
+    {
+        path: '/item/:id', component: Item,
+        props: (route: { params: { id: string } }) => ({
+            id: route.params.id
         })
     },
-    { path: '/item/:id/edit', component: EditItem,
-        props: route => ({
-          id: route.params.id,
+    {
+        path: '/item/:id/edit', component: EditItem,
+        props: (route: { params: { id: string } }) => ({
+            id: route.params.id
         })
     },
     { path: "/", component: Storefront },
@@ -65,7 +67,9 @@ export const router = createRouter({
 
 library.add(fas);
 
+
 createApp(App)
     .use(router)
     .component('fa', FontAwesomeIcon)
     .mount('#app')
+

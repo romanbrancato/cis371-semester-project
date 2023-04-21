@@ -33,7 +33,8 @@ import { collection, onSnapshot } from "firebase/firestore";
 
 const currentUser = ref(auth.currentUser);
 let input = ref("");
-let items = reactive([])
+let items: { id: string, item_name: string, price: number, description:string, location: string, image_url: string }[] = reactive([]);
+
 
 onMounted(() => {
     const listingsRef = collection(db, "listings");
@@ -42,7 +43,11 @@ onMounted(() => {
         querySnapshot.forEach((doc) => {
             const item = {
                 id: doc.id,
-                ...doc.data()
+                item_name: doc.data().item_name,
+                price: doc.data().price,
+                description: doc.data().description,
+                location: doc.data().location,
+                image_url: doc.data().image_url
             };
             items.push(item);
         });

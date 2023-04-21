@@ -26,8 +26,9 @@ import { ref, reactive, onMounted } from "vue";
 import { auth, db } from "../main";
 import { collection, onSnapshot, query, where, deleteDoc, doc } from "firebase/firestore";
 
+
 const currentUser = ref(auth.currentUser);
-let items = reactive([]);
+let items: { id: string, item_name: string, price: number, location: string, image_url: string }[] = reactive([]);
 
 onMounted(() => {
     const listingsRef = collection(db, "listings");
@@ -37,14 +38,17 @@ onMounted(() => {
         querySnapshot.forEach((doc) => {
             const item = {
                 id: doc.id,
-                ...doc.data(),
+                item_name: doc.data().item_name,
+                price: doc.data().price,
+                location: doc.data().location,
+                image_url: doc.data().image_url
             };
             items.push(item);
         });
     });
 });
 
-const deleteItem = async (item) => {
+const deleteItem = async (item: { id: string, item_name: string, price: number, location: string, image_url: string }) => {
     try {
         const docRef = doc(db, "listings", item.id);
         await deleteDoc(docRef);

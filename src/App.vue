@@ -34,7 +34,7 @@ const currentUser = ref(auth.currentUser);
 const loggedInUser = ref("Login");
 
 watch(currentUser, (user) => {
-  loggedInUser.value = user ? user.email.substring(0, user.email.indexOf('@')) : "Login";
+  loggedInUser.value = user ? user.email?.substring(0, user.email.indexOf('@')) ?? "Login" : "Login";
 });
 
 auth.onAuthStateChanged((user) => {

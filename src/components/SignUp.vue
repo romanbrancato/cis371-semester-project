@@ -33,7 +33,7 @@ export default {
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value);
                 message.value = "Successfully signed up";
-            } catch (error) {
+            } catch (error: any) {
                 message.value = "Error creating user: " + error.message;
             }
         };

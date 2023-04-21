@@ -30,7 +30,17 @@ import { db, storage } from "../main";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, } from "firebase/storage";
 
-let file;
+interface Item {
+    item_name: string;
+    description: string;
+    price: number;
+    location: string;
+    image_url: string;
+    timestamp: string;
+    user_id: string;
+}
+
+let file: File;
 
 export default {
     props: {
@@ -41,43 +51,50 @@ export default {
     },
     data() {
         return {
-            image: null,
+            image: null as string | null,
             item_name: "",
             description: "",
-            price: null,
+            price: null as number | null,
             location: "",
-            item: null,
-            timestamp: ""
+            item: null as Item | null,
+            timestamp: "",
         };
     },
     async mounted() {
         const listingsRef = collection(db, "listings");
         const itemDoc = doc(listingsRef, this.id);
         const itemDocData = await getDoc(itemDoc);
-        this.item = itemDocData.exists() ? itemDocData.data() : null;
+        this.item = itemDocData.exists() ? itemDocData.data() as Item : null;
 
         if (this.item) {
             this.item_name = this.item.item_name || "";
             this.description = this.item.description || "";
-            this.price = this.item.price || null;
+            this.price = this.item.price ?? null;
             this.location = this.item.location || "";
             this.image = this.item.image_url || null;
             this.timestamp = this.item.timestamp || "";
         }
     },
     methods: {
-        handleFileUpload(event) {
-            file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.image = reader.result;
-            };
-            reader.readAsDataURL(file);
+        handleFileUpload(event: Event) {
+            if (event.target instanceof HTMLInputElement && event.target.files) {
+                file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const result = reader.result;
+                    if (typeof result === "string") {
+                        this.image = result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
         },
         replaceImage() {
             if (this.image) {
                 const input = document.getElementById('photo-upload');
-                input.click();
+                if (input) {
+                    input.click();
+                }
             }
         },
         async updateListing() {
@@ -88,8 +105,9 @@ export default {
                 description: this.description,
                 price: this.price,
                 location: this.location,
+                image_url: this.item?.image_url || null
             };
-            if (file) {
+            if (file && this.item != null) {
                 const storageRef = ref(storage, "images/" + this.item.user_id + "/" + this.item.timestamp);
                 await uploadBytes(storageRef, file);
                 const downloadURL = await getDownloadURL(storageRef);

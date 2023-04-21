@@ -1,26 +1,26 @@
 <template>
     <div>
         <div class="image-container" v-if="itemExists">
-            <img class="image" :src="item.image_url">
+            <img class="image" :src="item?.image_url">
         </div>
         <div class="item-properties-container" v-if="itemExists">
-            <div class="properties">
-                <h1>{{ item.item_name }}</h1>
+            <div class="item-header">
+                <h1>{{ item?.item_name }}</h1>
                 <p>
-                    <fa :icon="['fas', 'dollar-sign']" />{{ item.price }}
+                    <fa :icon="['fas', 'dollar-sign']" />{{ item?.price }}
                 </p>
             </div>
         </div>
         <div class="description-label">Description</div>
         <div class="description-container" v-if="itemExists">
             <div class="properties">
-                <p class="description">{{ item.description }}</p>
+                <p class="description">{{ item?.description }}</p>
                 <button class="contact" @click="showContactInfo">
                     <fa :icon="['fas', 'message']" /> Contact Seller
                 </button>
-                <p v-if="showSellerEmail">{{ item.user_id }}</p>
+                <p v-if="showSellerEmail">{{ item?.user_id }}</p>
                 <p>
-                    <fa :icon="['fas', 'location-dot']" /> {{ item.location }}
+                    <fa :icon="['fas', 'location-dot']" /> {{ item?.location }}
                 </p>
             </div>
         </div>
@@ -31,6 +31,15 @@
 import { db } from "../main";
 import { collection, doc, getDoc } from "firebase/firestore";
 
+interface Item {
+  item_name: string;
+  price: number;
+  image_url: string;
+  description: string;
+  user_id: string;
+  location: string;
+}
+
 export default {
     props: {
         id: {
@@ -40,7 +49,7 @@ export default {
     },
     data() {
         return {
-            item: null,
+            item: null as Item | null,
             showSellerEmail: false,
         };
     },
@@ -48,7 +57,7 @@ export default {
         const listingsRef = collection(db, "listings");
         const itemDoc = doc(listingsRef, this.id);
         const itemDocData = await getDoc(itemDoc);
-        this.item = itemDocData.exists() ? itemDocData.data() : null;
+        this.item = itemDocData.exists() ? (itemDocData.data() as Item) : null;
     },
     computed: {
         itemExists() {
@@ -98,8 +107,12 @@ h1 {
     height: 20vh;
     border-radius: 40px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    background: linear-gradient(to bottom right, #90B5B0, White);
+    background: linear-gradient(to bottom right, #E3E6EF, White);
     text-align: left;
+}
+.item-header {
+    text-align: center;
+    font-size: 20px;
 }
 
 .properties {

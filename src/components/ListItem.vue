@@ -28,14 +28,14 @@
 <script lang="ts">
 import { db, auth, storage } from "../main";
 import { addDoc, collection } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL,} from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, } from "firebase/storage";
 
-let file;
+let file: File;
 
 export default {
     data() {
         return {
-            image: null,
+            image: null as string | null,
             item_name: "",
             description: "",
             price: null,
@@ -43,18 +43,25 @@ export default {
         };
     },
     methods: {
-        handleFileUpload(event) {
-            file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.image = reader.result;
-            };
-            reader.readAsDataURL(file);
+        handleFileUpload(event: Event) {
+            if (event.target instanceof HTMLInputElement && event.target.files) {
+                file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const result = reader.result;
+                    if (typeof result === "string") {
+                        this.image = result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
         },
         replaceImage() {
             if (this.image) {
                 const input = document.getElementById('photo-upload');
-                input.click();
+                if (input) {
+                    input.click();
+                }
             }
         },
         async createListing() {
@@ -64,14 +71,10 @@ export default {
             const timestamp = Date.now();
             // Create a reference to the Firebase Storage bucket
             const storageRef = ref(storage, `images/${userId}/${timestamp}`);
-
             // Upload the file to the bucket using the put method
             const snapshot = await uploadBytes(storageRef, file);
-
             // Get the download URL for the uploaded file
             const downloadUrl = await getDownloadURL(snapshot.ref);
-
-
             // Create a new document in the "listings" collection in Firestore
             const listingsRef = collection(db, "listings");
             await addDoc(listingsRef, {
@@ -83,9 +86,7 @@ export default {
                 user_id: userId,
                 timestamp: timestamp
             });
-
             alert("Listing added")
-
             // Reset the form data
             this.item_name = "";
             this.description = "";

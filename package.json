@@ -17,6 +17,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "firebase": "^9.20.0",
     "vue": "^3.2.47",
+    "vue-gtag": "^2.0.1",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {

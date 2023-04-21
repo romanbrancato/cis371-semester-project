@@ -33,7 +33,7 @@ export default {
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
         message.value = `Successfully logged in`;
-      } catch (error) {
+      } catch (error: any) {
         message.value = `Error logging in: ${error.message}`;
       }
     };
