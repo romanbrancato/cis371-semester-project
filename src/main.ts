@@ -73,7 +73,7 @@ createApp(App)
     .use(router)
     .use(VueGtag, {
         config: { 
-          id: "GA_MEASUREMENT_ID",
+          id: "G-KH3FL681NH",
         },
       }, router)
     .component('fa', FontAwesomeIcon)
