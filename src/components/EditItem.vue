@@ -28,7 +28,7 @@
 <script lang="ts">
 import { db, storage } from "../main";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL,} from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, } from "firebase/storage";
 
 let file;
 
@@ -46,7 +46,8 @@ export default {
             description: "",
             price: null,
             location: "",
-            item: null
+            item: null,
+            timestamp: ""
         };
     },
     async mounted() {
@@ -61,6 +62,7 @@ export default {
             this.price = this.item.price || null;
             this.location = this.item.location || "";
             this.image = this.item.image_url || null;
+            this.timestamp = this.item.timestamp || "";
         }
     },
     methods: {
@@ -88,12 +90,13 @@ export default {
                 location: this.location,
             };
             if (file) {
-                const storageRef = ref(storage, "listings/" + this.id + "/" + file.name);
+                const storageRef = ref(storage, "images/" + this.item.user_id + "/" + this.item.timestamp);
                 await uploadBytes(storageRef, file);
                 const downloadURL = await getDownloadURL(storageRef);
                 updatedItem.image_url = downloadURL;
             }
             await updateDoc(itemDoc, updatedItem);
+            alert("Listing updated")
         }
     },
 };

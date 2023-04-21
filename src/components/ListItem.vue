@@ -61,9 +61,9 @@ export default {
             // Get the user id from Firebase auth
             const user = auth.currentUser;
             const userId = user?.email;
-
+            const timestamp = Date.now();
             // Create a reference to the Firebase Storage bucket
-            const storageRef = ref(storage, `images/${userId}/${Date.now()}`);
+            const storageRef = ref(storage, `images/${userId}/${timestamp}`);
 
             // Upload the file to the bucket using the put method
             const snapshot = await uploadBytes(storageRef, file);
@@ -81,7 +81,10 @@ export default {
                 location: this.location,
                 image_url: downloadUrl,
                 user_id: userId,
+                timestamp: timestamp
             });
+
+            alert("Listing added")
 
             // Reset the form data
             this.item_name = "";
