@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
+import VueGtag from "vue-gtag";
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -70,6 +71,11 @@ library.add(fas);
 
 createApp(App)
     .use(router)
+    .use(VueGtag, {
+        config: { 
+          id: "GA_MEASUREMENT_ID",
+        },
+      }, router)
     .component('fa', FontAwesomeIcon)
     .mount('#app')
 
