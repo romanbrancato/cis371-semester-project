@@ -7,9 +7,9 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons'
 
 import { initializeApp } from "firebase/app";
-import {getFirestore, Firestore} from "firebase/firestore"
-import {getAuth} from "firebase/auth";
-import { getStorage} from "firebase/storage";
+import { getFirestore, Firestore } from "firebase/firestore"
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 import { createRouter, createWebHashHistory } from "vue-router"
 import Storefront from "./components/Storefront.vue"
@@ -19,6 +19,8 @@ import Profile from "./components/Profile.vue"
 import Statistics from "./components/Statistics.vue"
 import ListItem from "./components/ListItem.vue"
 import Help from "./components/Help.vue"
+import Item from "./components/Item.vue"
+import EditItem from "./components/EditItem.vue"
 
 
 const firebaseConfig = {
@@ -31,12 +33,22 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db:Firestore = getFirestore(app);
+export const db: Firestore = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage();
 
 
 const componentRoutes = [
+    { path: '/item/:id', component: Item,
+        props: route => ({
+          id: route.params.id,
+        })
+    },
+    { path: '/item/:id/edit', component: EditItem,
+        props: route => ({
+          id: route.params.id,
+        })
+    },
     { path: "/", component: Storefront },
     { path: "/login", component: Login },
     { path: "/signup", component: SignUp },

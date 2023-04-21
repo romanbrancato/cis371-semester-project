@@ -6,25 +6,28 @@
                 <fa :icon="['fas', 'plus']" />
             </button>
         </router-link>
+        <div class="listing-label">Listings</div>
     </div>
-    <div>Listings</div>
     <div class="item-container">
         <div class="item" v-for="item in filteredList()" :key="item.id">
-            <img :src="item.image_url">
-            <div class="details">
-                <h2>{{ item.item_name }}</h2>
-                <p>${{ item.price }}</p>
-                <p>{{ item.location }}</p>
-            </div>
-        </div>
-        <div class="error" v-if="input && !filteredList().length">
-            <p>No results found!</p>
+            <router-link :to="'/item/' + item.id">
+                <img :src="item.image_url">
+                <div class="details">
+                    <h2>{{ item.item_name }}</h2>
+                    <p>
+                        <fa :icon="['fas', 'dollar-sign']" />{{ item.price }}
+                    </p>
+                    <p>
+                        <fa :icon="['fas', 'location-dot']" /> {{ item.location }}
+                    </p>
+                </div>
+            </router-link>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted} from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { auth, db } from "../main";
 import { collection, onSnapshot } from "firebase/firestore";
 
@@ -35,15 +38,14 @@ let items = reactive([])
 onMounted(() => {
     const listingsRef = collection(db, "listings");
     onSnapshot(listingsRef, (querySnapshot) => {
-        const newItems = [];
+        items.length = 0;
         querySnapshot.forEach((doc) => {
             const item = {
                 id: doc.id,
                 ...doc.data()
             };
-            newItems.push(item);
+            items.push(item);
         });
-        items = newItems;
     });
 });
 
@@ -130,6 +132,12 @@ input:focus {
     background-color: #E3D5C4;
 }
 
+.listing-label {
+    position: fixed;
+    bottom: -10%;
+    font-size: 20px;
+}
+
 .item-container {
     position: fixed;
     bottom: 0%;
@@ -152,38 +160,18 @@ input:focus {
     border-radius: 20px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
         rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    overflow: hidden;
 }
 
-/* Style the scrollbar in item-container*/
-.item-container::-webkit-scrollbar {
-    width: 7px;
-}
-
-/* Track */
-.item-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 20px;
-}
-
-/* Handle */
-.item-container::-webkit-scrollbar-thumb {
-    background: #F4E5D3;
-    border-radius: 20px;
-    border: 1px solid;
-}
-
-/* Handle on hover */
-.item-container::-webkit-scrollbar-thumb:hover {
-    background: #E3D5C4;
-}
 .details {
-    position:fixed;
-    bottom: 12%;
-  text-align: left;
+    position: relative;
+    padding-left: 10px;
+    text-align: left;
+    white-space: nowrap;
 }
 
-img{
+img {
     width: 100%;
     height: 60%;
-}
-</style>
+    object-fit: contain;
+}</style>

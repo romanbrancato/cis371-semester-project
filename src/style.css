@@ -1,5 +1,5 @@
 :root {
-  font-family: sans-serif, system-ui, Avenir, Helvetica, Arial;
+  font-family: sans-serif, system-ui;
   line-height: 1.5;
   font-weight: 600;
   color: black;
@@ -27,40 +27,25 @@ button {
   font-weight: 600;
 }
 
-#nav {
-  display: flex;
-  justify-content: center;
-  width: 100%;
+::-webkit-scrollbar {
+  width: 7px;
 }
 
-#nav a {
-  color: black;
-  padding: 10px;
-  margin-right: 40px;
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 20px;
 }
 
-#nav a:last-child {
-  margin-right: 0;
+::-webkit-scrollbar-thumb {
+  background: #F4E5D3;
+  border-radius: 20px;
+  border: 1px solid;
 }
 
-#nav a.active-tab {
-  position: relative;
+::-webkit-scrollbar-thumb:hover {
+  background: #E3D5C4;
 }
 
-#nav a:hover {
-  color: white;
-}
-
-#nav a.active-tab::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  width: 2px;
-  height: 50%;
-  background-color: black;
-}
 
 #app {
   max-width: 1280px;

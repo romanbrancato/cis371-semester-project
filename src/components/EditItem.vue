@@ -19,28 +19,49 @@
             <br>
             <input class="location" type="text" id="location" v-model="location" required placeholder="City, State">
         </form>
-        <button class="circular-button" title="Create New Listing" type="submit" @click="createListing">
-            <fa :icon="['fas', 'plus']" />
+        <button class="circular-button" title="Update Listing" type="submit" @click="updateListing">
+            <fa :icon="['fas', 'pen-to-square']" />
         </button>
     </div>
 </template>
   
 <script lang="ts">
-import { db, auth, storage } from "../main";
-import { addDoc, collection } from "firebase/firestore";
+import { db, storage } from "../main";
+import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL,} from "firebase/storage";
 
 let file;
 
 export default {
+    props: {
+        id: {
+            type: String,
+            required: true,
+        },
+    },
     data() {
         return {
             image: null,
             item_name: "",
             description: "",
             price: null,
-            location: ""
+            location: "",
+            item: null
         };
+    },
+    async mounted() {
+        const listingsRef = collection(db, "listings");
+        const itemDoc = doc(listingsRef, this.id);
+        const itemDocData = await getDoc(itemDoc);
+        this.item = itemDocData.exists() ? itemDocData.data() : null;
+
+        if (this.item) {
+            this.item_name = this.item.item_name || "";
+            this.description = this.item.description || "";
+            this.price = this.item.price || null;
+            this.location = this.item.location || "";
+            this.image = this.item.image_url || null;
+        }
     },
     methods: {
         handleFileUpload(event) {
@@ -57,42 +78,27 @@ export default {
                 input.click();
             }
         },
-        async createListing() {
-            // Get the user id from Firebase auth
-            const user = auth.currentUser;
-            const userId = user?.email;
-
-            // Create a reference to the Firebase Storage bucket
-            const storageRef = ref(storage, `images/${userId}/${Date.now()}`);
-
-            // Upload the file to the bucket using the put method
-            const snapshot = await uploadBytes(storageRef, file);
-
-            // Get the download URL for the uploaded file
-            const downloadUrl = await getDownloadURL(snapshot.ref);
-
-
-            // Create a new document in the "listings" collection in Firestore
+        async updateListing() {
             const listingsRef = collection(db, "listings");
-            await addDoc(listingsRef, {
+            const itemDoc = doc(listingsRef, this.id);
+            const updatedItem = {
                 item_name: this.item_name,
                 description: this.description,
                 price: this.price,
                 location: this.location,
-                image_url: downloadUrl,
-                user_id: userId,
-            });
-
-            // Reset the form data
-            this.item_name = "";
-            this.description = "";
-            this.price = null;
-            this.location = "";
-            this.image = null;
-        },
+            };
+            if (file) {
+                const storageRef = ref(storage, "listings/" + this.id + "/" + file.name);
+                await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(storageRef);
+                updatedItem.image_url = downloadURL;
+            }
+            await updateDoc(itemDoc, updatedItem);
+        }
     },
 };
 </script>
+
 
 <style scoped>
 .item-properties-container {

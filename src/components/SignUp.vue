@@ -11,7 +11,7 @@
                 <br>
                 <input type="password" id="password" v-model="password" required placeholder="Password">
                 <br>
-                <button class="signup-button" type="submit">Sign Up</button>
+                <button class="signup-button" type="submit"><fa :icon="['fas', 'user-plus']" /> Sign Up</button>
             </form>
         </div>
         <p>{{ message }}</p>
@@ -90,5 +90,40 @@ input:focus {
 
 .signup-button:hover {
     background-color: #E3D5C4;
+}
+
+#nav {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+#nav a {
+  color: black;
+  padding: 10px;
+  margin-right: 40px;
+}
+
+#nav a:last-child {
+  margin-right: 0;
+}
+
+#nav a.active-tab {
+  position: relative;
+}
+
+#nav a:hover {
+  color: white;
+}
+
+#nav a.active-tab::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 50%;
+  background-color: black;
 }
 </style>
