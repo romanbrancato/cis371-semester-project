@@ -185,7 +185,7 @@ textarea:focus {
 }
 
 .price {
-    background: white url("src/assets/dollar-sign.svg") no-repeat 10px center;
+    background: white url("/dollar-sign.svg") no-repeat 10px center;
     background-size: 20px 20px;
     padding-left: 40px;
 }

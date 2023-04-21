@@ -91,7 +91,7 @@ input {
     height: 60px;
     margin: 20px auto;
     padding: 10px 45px;
-    background: white url("src/assets/magnifying-glass.svg") no-repeat 15px center;
+    background: white url("/magnifying-glass.svg") no-repeat 15px center;
     background-size: 15px 15px;
     font-size: 16px;
     border: 1px solid #94BAB5;
