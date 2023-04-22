@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host localhost --port 8080",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
@@ -15,9 +15,10 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
+    "chart.js": "^4.2.1",
     "firebase": "^9.20.0",
     "vue": "^3.2.47",
-    "vue-gtag": "^2.0.1",
+    "vue-chartjs": "^5.2.0",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {

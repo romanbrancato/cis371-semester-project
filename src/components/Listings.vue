@@ -7,6 +7,11 @@
                 <p>${{ item.price }}</p>
                 <p>{{ item.location }}</p>
                 <div class="button-container">
+                    <router-link :to="'/item/' + item.id + '/statistics'">
+                        <div class="circular-button">
+                            <fa :icon="['fas', 'chart-simple']" />
+                        </div>
+                    </router-link>
                     <router-link :to="'/item/' + item.id + '/edit'">
                         <div class="circular-button">
                             <fa :icon="['fas', 'pen-to-square']" />

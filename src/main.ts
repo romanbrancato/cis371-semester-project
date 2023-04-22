@@ -1,8 +1,6 @@
 import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
-import VueGtag from "vue-gtag";
-
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -12,7 +10,7 @@ import { getFirestore, Firestore } from "firebase/firestore"
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
-import { createRouter, createWebHashHistory } from "vue-router"
+import { createRouter, createWebHistory } from "vue-router"
 import Storefront from "./components/Storefront.vue"
 import Login from "./components/Login.vue"
 import SignUp from "./components/SignUp.vue"
@@ -52,6 +50,12 @@ const componentRoutes = [
             id: route.params.id
         })
     },
+    {
+        path: '/item/:id/statistics', component: Statistics,
+        props: (route: { params: { id: string } }) => ({
+            id: route.params.id
+        })
+    },
     { path: "/", component: Storefront },
     { path: "/login", component: Login },
     { path: "/signup", component: SignUp },
@@ -63,19 +67,13 @@ const componentRoutes = [
 
 export const router = createRouter({
     routes: componentRoutes,
-    history: createWebHashHistory()
+    history: createWebHistory()
 });
 
 library.add(fas);
 
-
 createApp(App)
     .use(router)
-    .use(VueGtag, {
-        config: { 
-          id: "G-KH3FL681NH",
-        },
-      }, router)
     .component('fa', FontAwesomeIcon)
     .mount('#app')
 

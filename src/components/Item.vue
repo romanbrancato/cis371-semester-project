@@ -29,15 +29,16 @@
   
 <script lang="ts">
 import { db } from "../main";
-import { collection, doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 
 interface Item {
-  item_name: string;
-  price: number;
-  image_url: string;
-  description: string;
-  user_id: string;
-  location: string;
+    item_name: string;
+    price: number;
+    image_url: string;
+    description: string;
+    user_id: string;
+    location: string;
+    loadedAt: number[];
 }
 
 export default {
@@ -54,10 +55,23 @@ export default {
         };
     },
     async mounted() {
-        const listingsRef = collection(db, "listings");
-        const itemDoc = doc(listingsRef, this.id);
-        const itemDocData = await getDoc(itemDoc);
-        this.item = itemDocData.exists() ? (itemDocData.data() as Item) : null;
+        try {
+            const listingsRef = collection(db, "listings");
+            const itemDoc = doc(listingsRef, this.id);
+            const itemDocData = await getDoc(itemDoc);
+            this.item = itemDocData.exists() ? (itemDocData.data() as Item) : null;
+
+            if (this.item) {
+                const loadedAt = this.item.loadedAt || [];
+                loadedAt.push(new Date().getTime());
+                const updateData = {
+                    loadedAt,
+                };
+                await updateDoc(itemDoc, updateData);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     },
     computed: {
         itemExists() {
@@ -110,6 +124,7 @@ h1 {
     background: linear-gradient(to bottom right, #E3E6EF, White);
     text-align: left;
 }
+
 .item-header {
     text-align: center;
     font-size: 20px;
