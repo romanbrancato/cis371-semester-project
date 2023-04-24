@@ -2,8 +2,8 @@
   <div>
     <div class="side-bar">
       <ul>
-        <li :class="{ active: currentTab === 'account' }"><a @click="currentTab = 'account'"><fa :icon="['fas', 'user']" /> Account</a></li>
         <li :class="{ active: currentTab === 'listings' }"><a @click="currentTab = 'listings'"><fa :icon="['fass', 'tags']" /> Listings</a></li>
+        <li :class="{ active: currentTab === 'account' }"><a @click="currentTab = 'account'"><fa :icon="['fas', 'user']" /> Account</a></li>
       </ul>
       <button class="logout-button" @click="logout"><fa :icon="['fas', 'right-from-bracket']" /> Logout</button>
     </div>
@@ -23,7 +23,7 @@ import Listings from "./Listings.vue";
 
 const router = useRouter();
 
-const currentTab = ref("account");
+const currentTab = ref("listings");
 
 const logout = async () => {
   try {
